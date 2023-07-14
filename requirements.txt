@@ -1,3 +1,4 @@
 dask
 glymur
 numpy
+scikit-image

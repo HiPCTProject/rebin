@@ -1,55 +1,71 @@
 import logging
 from pathlib import Path
 import math
+import os
 
 import dask.array as da
 import glymur
 import numpy as np
 from dask import delayed
+from dask.diagnostics import ProgressBar
+from skimage.transform import downscale_local_mean
 
 logging.basicConfig(level=logging.INFO)
 
-
+# Make sure numpy doesn't try to use more than one thread
 glymur.set_option("lib.num_threads", 1)
+for var in [
+    "OMP_NUM_THREADS",
+    "MKL_NUM_THREADS",
+    "OPENBLAS_NUM_THREADS",
+    "BLIS_NUM_THREADS",
+]:
+    os.environ[var] = "1"
 
 
-def save_jp2(arr: np.ndarray, file_path: Path, dtype: np.uint8 | np.uint16) -> Path:
+def save_jp2(
+    arr: np.ndarray, file_path: Path, dtype: np.uint8 | np.uint16, *, cratios: list[int]
+) -> None:
     """
     Save an array to a jp2 file.
+
+    Parameters
+    ----------
+    arr :
+        Data array.
+    file_path :
+        File to save to.
+    dtype :
+        Data type to cast to, must be uint8 or uint16 (8-bit or 16-bit).
+    cratios :
+        Compression ratios.
     """
-    logging.info(f"Saving to {file_path}")
     jp2 = glymur.Jp2k(str(file_path), cratios=[10])
     jp2[:] = np.asarray(arr).astype(dtype)
-    return file_path
 
 
-def rebin_slab(arr: np.ndarray, shape_2d: tuple[int, int]):
+def rebin_slab(arr: np.ndarray, factor: int):
     """
     Rebin a 3D slab.
     """
     # Mean over z-axis
     arr = np.mean(arr, axis=2)
     # Mean over x/y axes
-    shape = (
-        shape_2d[0],
-        arr.shape[0] // shape_2d[0],
-        shape_2d[1],
-        arr.shape[1] // shape_2d[1],
-    )
-    arr = arr.reshape(shape).mean(axis=-1).mean(axis=1).astype(arr.dtype)
+    arr = downscale_local_mean(arr, (factor, factor))
     return arr
 
 
 @delayed
 def rebin_and_save_slab(
     arr: np.ndarray,
-    shape_2d: tuple[int, int],
+    factor: int,
     file_path: Path,
     dtype: np.uint8 | np.uint16,
-) -> Path:
-    logging.info(f"Rebinning for {file_path}")
-    arr = rebin_slab(arr, shape_2d)
-    return save_jp2(arr, file_path, dtype)
+) -> None:
+    # Read array into memory
+    arr = np.asarray(arr)
+    arr = rebin_slab(arr, factor)
+    save_jp2(arr, file_path, dtype, cratios=[10])
 
 
 def rebin(directory: Path, bin_factor: int) -> Path:
@@ -91,24 +107,26 @@ def rebin(directory: Path, bin_factor: int) -> Path:
     )
     logging.info(f"Output shape is {output_shape}")
 
-    # Create a dask array for full input volume, still does *not* read any data into memory.
+    # Create a dask array for full input volume, does *not* read any data into memory.
     volume = da.stack([da.from_array(j2k, chunks=slice_shape) for j2k in j2ks], axis=-1)
-    logging.info(f"{volume.shape=}")
 
-    jp2_fnames_delayed = []
-    # Loop through z-slices of output image
+    delayed_slab_saves = []
+    # Loop through z-slices of output image, and set up delayded calls to
+    # rebin_and_save_slab
+    logging.info("Setting up computation...")
     for z in range(output_shape[2]):
         slab = volume[:, :, z * bin_factor : (z + 1) * bin_factor]
         fname = rebin_and_save_slab(
-            slab, output_shape[:2], output_dir / f"{str(z).zfill(6)}.jp2", dtype_in
+            slab, bin_factor, output_dir / f"{str(z).zfill(6)}.jp2", dtype_in
         )
-        jp2_fnames_delayed.append(fname)
+        delayed_slab_saves.append(fname)
 
-    # Run computation!
-    delayed(jp2_fnames_delayed).compute()
+    logging.info("Running computation!")
+    with ProgressBar():
+        delayed(delayed_slab_saves).compute()
     return output_dir
 
 
 if __name__ == "__main__":
-    output_dir = rebin(Path("/Users/dstansby/data/kidney2"), 2)
+    output_dir = rebin(Path("/Users/dstansby/data/kidney2"), 5)
     logging.info(f"Done, rebinned files in {output_dir}")
