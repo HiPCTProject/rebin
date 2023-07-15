@@ -116,6 +116,7 @@ def rebin(directory: Path, bin_factor: int) -> Path:
     slice_shape = j2ks[0].shape
     dtype_in = j2ks[0].dtype
 
+    logging.info(f"Input shape is {(slice_shape, n_ims)}")
     output_shape = (
         math.ceil(slice_shape[0] / bin_factor),
         math.ceil(slice_shape[1] / bin_factor),
