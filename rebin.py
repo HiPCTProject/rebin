@@ -1,3 +1,19 @@
+"""
+Script to re-bin stacks of 2D images.
+
+Design
+------
+This script is implemented using dask to:
+1. Lazily load jp2 slices a handful at a time,
+   instead of reading them all into memory at once.
+2. Distribute calculating the mean across several processes.
+
+Each 'slab' of thickness `bin_factor` is passed to `rebin_and_save_slab`.
+Once that slab of images has been binned and saved, the slices are
+automatically unloaded from memory, preventing memory overloads.
+"""
+
+
 import logging
 from pathlib import Path
 import math
