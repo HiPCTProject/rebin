@@ -1,6 +1,8 @@
 """
 Script to re-bin stacks of 2D images.
 
+Currently only works for jp2 images.
+
 Design
 ------
 This script is implemented using dask to:
@@ -28,7 +30,7 @@ from skimage.transform import downscale_local_mean
 
 logging.basicConfig(level=logging.INFO)
 
-# Make sure numpy doesn't try to use more than one thread
+# Make sure numpy or glymur doesn't try to use more than one thread
 glymur.set_option("lib.num_threads", 1)
 for var in [
     "OMP_NUM_THREADS",
