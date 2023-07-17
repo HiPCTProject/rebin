@@ -144,8 +144,3 @@ def rebin(directory: Path, *, bin_factor: int) -> Path:
     with ProgressBar():
         delayed(delayed_slab_saves).compute()
     return output_dir
-
-
-if __name__ == "__main__":
-    output_dir = rebin(Path("/Users/dstansby/data/kidney2"), 5)
-    logging.info(f"Done, rebinned files in {output_dir}")
