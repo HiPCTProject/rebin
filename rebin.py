@@ -86,7 +86,7 @@ def rebin_and_save_slab(
     save_jp2(arr, file_path, dtype, cratios=[10])
 
 
-def rebin(directory: Path, bin_factor: int) -> Path:
+def rebin(directory: Path, *, bin_factor: int) -> Path:
     """
     Rebin a series of jp2 images.
 
