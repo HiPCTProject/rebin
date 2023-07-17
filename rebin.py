@@ -58,7 +58,7 @@ def save_jp2(
     cratios :
         Compression ratios.
     """
-    jp2 = glymur.Jp2k(str(file_path), cratios=[10])
+    jp2 = glymur.Jp2k(str(file_path), cratios=[10], numres=1)
     jp2[:] = np.asarray(arr).astype(dtype)
 
 

@@ -4,7 +4,7 @@ import glymur
 import numpy as np
 import pytest
 
-import rebin
+from rebin import rebin
 
 
 @pytest.fixture
@@ -12,15 +12,19 @@ def input_jp2_folder(tmp_path: Path) -> Path:
     """
     Populate a (temporary) directory with some .jp2 files.
     """
-    jp2_path = tmp_path / "50um_input_jp2_"
+    jp2_path = tmp_path / "input_jp2s"
     jp2_path.mkdir()
-    for i in range(256):
-        fname = f"img{i}.jp2"
-        jp2 = glymur.Jp2k(str(jp2_path / fname))
-        jp2[:] = np.ones((512, 1024)).astype(np.uint16)
+    fname = f"img0.jp2"
+    jp2 = glymur.Jp2k(str(jp2_path / fname), numres=1)
+    jp2[:] = np.array([[0, 1], [2, 5]]).astype(np.uint16)
 
     return jp2_path
 
 
 def test_rebin(input_jp2_folder: Path) -> None:
-    rebin.rebin(input_jp2_folder, bin_factor=4)
+    output_dir = rebin(input_jp2_folder, bin_factor=2)
+    assert output_dir.exists()
+    jp2_files = list(output_dir.glob("*.jp2"))
+    assert len(jp2_files) == 1
+    jp2 = glymur.Jp2k(str(jp2_files[0]))
+    np.testing.assert_equal(jp2[:], np.array([[2]], dtype=np.uint16))
