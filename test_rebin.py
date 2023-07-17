@@ -22,6 +22,11 @@ def populate_jp2_files(data: np.ndarray, path: Path) -> None:
     "array_in, bin_factor, expected_arrays",
     [
         (np.array([[[0, 1], [2, 5]]]), 2, [np.array([[2]])]),
+        # downscale_local_mean pads with zeros, so the edge here is calculated
+        # as (10 + 12 + 0 + 0) / 4 = 5
+        (np.array([[[0, 1], [2, 5], [10, 12]]]), 2, [np.array([[2], [5]])]),
+        # A test that writes two jp2 files
+        (np.ones(shape=(10, 10, 10)), 5, [np.ones(shape=(2, 2)), np.ones(shape=(2, 2))]),
     ],
 )
 def test_rebin(
