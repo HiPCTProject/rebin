@@ -7,24 +7,32 @@ import pytest
 from rebin import rebin
 
 
-@pytest.fixture
-def input_jp2_folder(tmp_path: Path) -> Path:
+def populate_jp2_files(data: np.ndarray, path: Path) -> None:
     """
-    Populate a (temporary) directory with some .jp2 files.
+    Populate a directory or jp2 files from array data.
     """
+    assert data.ndim == 3
+    for i, arr in enumerate(data):
+        f_path = path / f"img{str(i).zfill(4)}.jp2"
+        jp2 = glymur.Jp2k(str(f_path), numres=1)
+        jp2[:] = arr.astype(np.uint16)
+
+
+@pytest.mark.parametrize(
+    "array_in, expected_arrays", [(np.array([[[0, 1], [2, 5]]]), [np.array([[2]])])]
+)
+def test_rebin(
+    tmp_path: Path, array_in: np.ndarray, expected_arrays: list[np.ndarray]
+) -> None:
     jp2_path = tmp_path / "input_jp2s"
     jp2_path.mkdir()
-    fname = f"img0.jp2"
-    jp2 = glymur.Jp2k(str(jp2_path / fname), numres=1)
-    jp2[:] = np.array([[0, 1], [2, 5]]).astype(np.uint16)
+    populate_jp2_files(array_in, jp2_path)
 
-    return jp2_path
-
-
-def test_rebin(input_jp2_folder: Path) -> None:
-    output_dir = rebin(input_jp2_folder, bin_factor=2)
+    output_dir = rebin(jp2_path, bin_factor=2)
     assert output_dir.exists()
-    jp2_files = list(output_dir.glob("*.jp2"))
-    assert len(jp2_files) == 1
-    jp2 = glymur.Jp2k(str(jp2_files[0]))
-    np.testing.assert_equal(jp2[:], np.array([[2]], dtype=np.uint16))
+    jp2_files = sorted(output_dir.glob("*.jp2"))
+    assert len(jp2_files) == len(expected_arrays)
+
+    for jp2_file, arr in zip(jp2_files, expected_arrays, strict=True):
+        jp2 = glymur.Jp2k(str(jp2_file))
+        np.testing.assert_equal(jp2[:], arr.astype(np.uint16))
