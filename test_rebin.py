@@ -47,8 +47,8 @@ def test_rebin(
 @pytest.mark.parametrize(
     "array_in, bin_factor, err_msg",
     [
-        # Bin factor = 1
         (np.array([[[0, 1], [2, 5]]]), 1, "bin_factor must be > 1"),
+        (np.array([[[0, 1], [2, 5]]]), 1.5, "bin_factor must be an integer"),
     ],
 )
 def test_rebin_errors(
@@ -57,6 +57,9 @@ def test_rebin_errors(
     bin_factor: int,
     err_msg: str,
 ) -> None:
+    """
+    Test for rebinning errors.
+    """
     jp2_path = tmp_path / "input_jp2s"
     jp2_path.mkdir()
     populate_jp2_files(array_in, jp2_path)
