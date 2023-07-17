@@ -62,7 +62,7 @@ def save_jp2(
     jp2[:] = np.asarray(arr).astype(dtype)
 
 
-def rebin_slab(arr: np.ndarray, factor: int):
+def rebin_slab(arr: np.ndarray, factor: int) -> np.ndarray:
     """
     Rebin a 3D slab.
     """
@@ -73,7 +73,7 @@ def rebin_slab(arr: np.ndarray, factor: int):
     return arr
 
 
-@delayed
+@delayed  # type: ignore[misc]
 def rebin_and_save_slab(
     arr: np.ndarray,
     factor: int,
