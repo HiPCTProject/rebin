@@ -86,7 +86,7 @@ def rebin_and_save_slab(
     save_jp2(arr, file_path, dtype, cratios=[10])
 
 
-def rebin(directory: Path, *, bin_factor: int) -> Path:
+def rebin(directory: Path, *, bin_factor: int, num_workers: int = 4) -> Path:
     """
     Rebin a series of jp2 images.
 
@@ -94,12 +94,9 @@ def rebin(directory: Path, *, bin_factor: int) -> Path:
     sorted in alpha-numeric order,
     e.g., slice_000.jp2, slice_001.jp2, slice_002.jp2...
 
-    Parameters
-    ----------
-    directory :
-        Path to directory with jp2 images.
-    bin_factor : int
-        Number of pixels in each bin.
+    :param directory: Path to directory with jp2 images.
+    :param bin_factor: Number of pixels in each bin.
+    :param num_workers: Number of workers used to process in parallel.
     """
     if bin_factor <= 1:
         raise ValueError("bin_factor must be > 1")
@@ -142,5 +139,11 @@ def rebin(directory: Path, *, bin_factor: int) -> Path:
 
     logging.info("Running computation!")
     with ProgressBar():
-        delayed(delayed_slab_saves).compute()
+        delayed(delayed_slab_saves).compute(num_workers=num_workers)
     return output_dir
+
+
+if __name__ == "__main__":
+    import clize
+
+    clize.run(rebin)
