@@ -43,7 +43,7 @@ def test_rebin(
     jp2_path.mkdir()
     populate_jp2_files(array_in, jp2_path)
 
-    output_dir = rebin(jp2_path, bin_factor=bin_factor)
+    output_dir = rebin(jp2_path, bin_factor=bin_factor, num_workers=2)
     assert output_dir.exists()
     jp2_files = sorted(output_dir.glob("*.jp2"))
     assert len(jp2_files) == len(expected_arrays)
