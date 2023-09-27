@@ -1,2 +1,12 @@
 [tool.mypy]
 ignore_missing_imports = true
+
+
+[tool.ruff]
+fix = true
+force-exclude = true
+select = [
+    "F401", # Remove unused imports
+    "I", # Sort imports
+    "UP", # Update Python syntax
+]

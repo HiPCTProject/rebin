@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import List
 
 import glymur
 import numpy as np
@@ -37,7 +38,7 @@ def test_rebin(
     tmp_path: Path,
     array_in: np.ndarray,
     bin_factor: int,
-    expected_arrays: list[np.ndarray],
+    expected_arrays: List[np.ndarray],
 ) -> None:
     jp2_path = tmp_path / "input_jp2s"
     jp2_path.mkdir()
@@ -48,7 +49,7 @@ def test_rebin(
     jp2_files = sorted(output_dir.glob("*.jp2"))
     assert len(jp2_files) == len(expected_arrays)
 
-    for jp2_file, arr in zip(jp2_files, expected_arrays, strict=True):
+    for jp2_file, arr in zip(jp2_files, expected_arrays):
         jp2 = glymur.Jp2k(str(jp2_file))
         np.testing.assert_equal(jp2[:], arr.astype(np.uint16))
 

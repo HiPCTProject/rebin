@@ -17,9 +17,10 @@ automatically unloaded from memory, preventing memory overloads.
 
 
 import logging
-from pathlib import Path
 import math
 import os
+from pathlib import Path
+from typing import List, Union
 
 import dask.array as da
 import glymur
@@ -42,7 +43,11 @@ for var in [
 
 
 def save_jp2(
-    arr: np.ndarray, file_path: Path, dtype: np.uint8 | np.uint16, *, cratios: list[int]
+    arr: np.ndarray,
+    file_path: Path,
+    dtype: Union[np.uint8, np.uint16],
+    *,
+    cratios: List[int],
 ) -> None:
     """
     Save an array to a jp2 file.
@@ -58,7 +63,7 @@ def save_jp2(
     cratios :
         Compression ratios.
     """
-    jp2 = glymur.Jp2k(str(file_path), cratios=[10], numres=1)
+    jp2 = glymur.Jp2k(str(file_path), cratios=cratios, numres=1)
     jp2[:] = np.asarray(arr).astype(dtype)
 
 
@@ -78,7 +83,7 @@ def rebin_and_save_slab(
     arr: np.ndarray,
     factor: int,
     file_path: Path,
-    dtype: np.uint8 | np.uint16,
+    dtype: Union[np.uint8, np.uint16],
 ) -> None:
     # Read array into memory
     arr = np.asarray(arr)
