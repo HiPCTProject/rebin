@@ -17,8 +17,7 @@ scikit-image
 Download `rebin.py`.
 Example run: `python rebin.py path/to/jp2/directory --bin-factor=3 --num-workers=2`
 
-```bash
-% python rebin.py --help
+```
 Usage: rebin.py [OPTIONS] directory
 
 Rebin a series of jp2 images.
@@ -26,12 +25,13 @@ Rebin a series of jp2 images.
 Assumes that all the input jp2 images have their filenames sorted in alpha-numeric order, e.g., slice_000.jp2, slice_001.jp2, slice_002.jp2...
 
 Arguments:
-  directory           Path to directory with jp2 images. (type: PATH)
+  directory                 Path to directory with jp2 images. (type: PATH)
 
 Options:
-  --bin-factor=INT    Number of pixels in each bin.
-  --num-workers=INT   Number of workers used to process in parallel. (default: 4)
+  --output-directory=PATH
+  --bin-factor=INT          Number of pixels in each bin.
+  --num-workers=INT         Number of workers used to process in parallel. (default: 4)
 
 Other actions:
-  -h, --help          Show the help
+  -h, --help                Show the help
 ```
