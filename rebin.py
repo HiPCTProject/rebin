@@ -84,11 +84,13 @@ def rebin_and_save_slab(
     factor: int,
     file_path: Path,
     dtype: Union[np.uint8, np.uint16],
+    *,
+    cratios: List[int],
 ) -> None:
     # Read array into memory
     arr = np.asarray(arr)
     arr = rebin_slab(arr, factor)
-    save_jp2(arr, file_path, dtype, cratios=[10])
+    save_jp2(arr, file_path, dtype, cratios=cratios)
 
 
 def rebin(directory: Path, *, bin_factor: int, num_workers: int = 4) -> Path:
@@ -119,6 +121,7 @@ def rebin(directory: Path, *, bin_factor: int, num_workers: int = 4) -> Path:
     j2ks = [glymur.Jp2k(f) for f in im_list]
     slice_shape = j2ks[0].shape
     dtype_in = j2ks[0].dtype
+    cratios = j2ks[0]._cratios
 
     logging.info(f"Input shape is {(slice_shape, n_ims)}")
     output_shape = (
@@ -138,7 +141,11 @@ def rebin(directory: Path, *, bin_factor: int, num_workers: int = 4) -> Path:
     for z in range(output_shape[2]):
         slab = volume[:, :, z * bin_factor : (z + 1) * bin_factor]
         fname = rebin_and_save_slab(
-            slab, bin_factor, output_dir / f"{str(z).zfill(6)}.jp2", dtype_in
+            slab,
+            bin_factor,
+            output_dir / f"{str(z).zfill(6)}.jp2",
+            dtype_in,
+            cratios=cratios,
         )
         delayed_slab_saves.append(fname)
 
