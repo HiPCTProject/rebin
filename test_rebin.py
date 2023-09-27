@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 
 import glymur
 import numpy as np
@@ -19,6 +19,7 @@ def populate_jp2_files(data: np.ndarray, path: Path) -> None:
         jp2[:] = arr.astype(np.uint16)
 
 
+@pytest.mark.parametrize("output_dir_in", [None, Path("output_dir")])
 @pytest.mark.parametrize(
     "array_in, bin_factor, expected_arrays",
     [
@@ -39,14 +40,25 @@ def test_rebin(
     array_in: np.ndarray,
     bin_factor: int,
     expected_arrays: List[np.ndarray],
+    output_dir_in: Optional[Path],
 ) -> None:
     jp2_path = tmp_path / "input_jp2s"
     jp2_path.mkdir()
     populate_jp2_files(array_in, jp2_path)
 
-    output_dir = rebin(jp2_path, bin_factor=bin_factor, num_workers=2)
-    assert output_dir.exists()
-    jp2_files = sorted(output_dir.glob("*.jp2"))
+    if output_dir_in is not None:
+        output_dir_in = tmp_path / output_dir_in
+
+    output_dir_out = rebin(
+        jp2_path, bin_factor=bin_factor, num_workers=2, output_directory=output_dir_in
+    )
+    assert output_dir_out.exists()
+    if output_dir_in is None:
+        assert output_dir_out.name == f"input_jp2s_bin{bin_factor}"
+    else:
+        assert output_dir_out == output_dir_in
+
+    jp2_files = sorted(output_dir_out.glob("*.jp2"))
     assert len(jp2_files) == len(expected_arrays)
 
     for jp2_file, arr in zip(jp2_files, expected_arrays):
