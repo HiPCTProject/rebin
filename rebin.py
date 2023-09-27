@@ -93,7 +93,13 @@ def rebin_and_save_slab(
     save_jp2(arr, file_path, dtype, cratios=cratios)
 
 
-def rebin(directory: Path, *, bin_factor: int, num_workers: int = 4) -> Path:
+def rebin(
+    directory: Path,
+    *,
+    bin_factor: int,
+    num_workers: int = 4,
+    output_directory: Path = None,
+) -> Path:
     """
     Rebin a series of jp2 images.
 
@@ -104,6 +110,7 @@ def rebin(directory: Path, *, bin_factor: int, num_workers: int = 4) -> Path:
     :param directory: Path to directory with jp2 images.
     :param bin_factor: Number of pixels in each bin.
     :param num_workers: Number of workers used to process in parallel.
+    :param: output_directory: Directory to output images to.
     """
     if bin_factor <= 1:
         raise ValueError("bin_factor must be > 1")
@@ -114,8 +121,9 @@ def rebin(directory: Path, *, bin_factor: int, num_workers: int = 4) -> Path:
     n_ims = len(im_list)
     logging.info(f"Found {n_ims} jp2 files")
 
-    output_dir = directory.parent / f"{directory.name}_bin{bin_factor}"
-    output_dir.mkdir(exist_ok=True)
+    if output_directory is None:
+        output_directory = directory.parent / f"{directory.name}_bin{bin_factor}"
+    output_directory.mkdir(exist_ok=True)
 
     # A list of jp2k objects, does *not* read any data into memory.
     j2ks = [glymur.Jp2k(f) for f in im_list]
@@ -143,7 +151,7 @@ def rebin(directory: Path, *, bin_factor: int, num_workers: int = 4) -> Path:
         fname = rebin_and_save_slab(
             slab,
             bin_factor,
-            output_dir / f"{str(z).zfill(6)}.jp2",
+            output_directory / f"{str(z).zfill(6)}.jp2",
             dtype_in,
             cratios=cratios,
         )
@@ -152,7 +160,7 @@ def rebin(directory: Path, *, bin_factor: int, num_workers: int = 4) -> Path:
     logging.info("Running computation!")
     with ProgressBar():
         delayed(delayed_slab_saves).compute(num_workers=num_workers)
-    return output_dir
+    return output_directory
 
 
 if __name__ == "__main__":
