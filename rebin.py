@@ -126,12 +126,13 @@ def rebin(
     output_directory.mkdir(exist_ok=True)
 
     # A list of jp2k objects, does *not* read any data into memory.
+    logging.info("Constructing Jp2k objects...")
     j2ks = [glymur.Jp2k(f) for f in im_list]
     slice_shape = j2ks[0].shape
     dtype_in = j2ks[0].dtype
     cratios = j2ks[0]._cratios
 
-    logging.info(f"Input shape is {(slice_shape, n_ims)}")
+    logging.info(f"Input shape is {(*slice_shape, n_ims)}")
     output_shape = (
         math.ceil(slice_shape[0] / bin_factor),
         math.ceil(slice_shape[1] / bin_factor),
