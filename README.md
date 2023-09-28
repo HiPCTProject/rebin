@@ -15,7 +15,7 @@ scikit-image
 ## Usage
 
 Download `rebin.py`.
-Example run: `python rebin.py path/to/jp2/directory --bin-factor=3 --num-workers=2`
+Example run: `python rebin.py path/to/jp2/directory --bin-factor=3 --num-workers=2 --cratio=5`
 
 ```
 Usage: rebin.py [OPTIONS] directory
@@ -29,6 +29,7 @@ Arguments:
 
 Options:
   --bin-factor=INT          Number of pixels in each bin.
+  --cratio=INT              Compression ratio to use to save jp2 images.
   --num-workers=INT         Number of workers used to process in parallel. (default: 4)
   --output-directory=PATH   Directory to output images to.
   --fname-prefix=STR        String to add the beginning of all output jp2 files. (default: )

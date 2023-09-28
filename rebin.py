@@ -97,6 +97,7 @@ def rebin(
     directory: Path,
     *,
     bin_factor: int,
+    cratio: int,
     num_workers: int = 4,
     output_directory: Path = None,
     fname_prefix: str = "",
@@ -110,6 +111,7 @@ def rebin(
 
     :param directory: Path to directory with jp2 images.
     :param bin_factor: Number of pixels in each bin.
+    :param cratio: Compression ratio to use to save jp2 images.
     :param num_workers: Number of workers used to process in parallel.
     :param output_directory: Directory to output images to.
     :param fname_prefix: String to add the beginning of all output jp2 files.
@@ -132,10 +134,9 @@ def rebin(
     j2ks = [glymur.Jp2k(f) for f in im_list]
     slice_shape = j2ks[0].shape
     dtype_in = j2ks[0].dtype
-    cratios = j2ks[0]._cratios
 
     logging.info(f"Data type is {dtype_in}")
-    logging.info(f"Compression ratios are {cratios}")
+    logging.info(f"Compression ratios is {cratio}")
     logging.info(f"Input shape is {(*slice_shape, n_ims)}")
     output_shape = (
         math.ceil(slice_shape[0] / bin_factor),
@@ -158,7 +159,7 @@ def rebin(
             bin_factor,
             output_directory / f"{fname_prefix}{str(z).zfill(6)}.jp2",
             dtype_in,
-            cratios=cratios,
+            cratios=[cratio],
         )
         delayed_slab_saves.append(fname)
 

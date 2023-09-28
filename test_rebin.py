@@ -7,6 +7,7 @@ import pytest
 
 from rebin import rebin
 
+CRATIO = 10
 
 def populate_jp2_files(data: np.ndarray, path: Path) -> None:
     """
@@ -55,6 +56,7 @@ def test_rebin(
         num_workers=2,
         output_directory=output_dir_in,
         fname_prefix="prefix_",
+        cratio=CRATIO
     )
     assert output_dir_out.exists()
     if output_dir_in is None:
@@ -91,4 +93,4 @@ def test_rebin_errors(
     populate_jp2_files(array_in, jp2_path)
 
     with pytest.raises(Exception, match=err_msg):
-        rebin(jp2_path, bin_factor=bin_factor)
+        rebin(jp2_path, bin_factor=bin_factor, cratio=CRATIO)
