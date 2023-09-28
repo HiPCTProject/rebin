@@ -28,9 +28,10 @@ Arguments:
   directory                 Path to directory with jp2 images. (type: PATH)
 
 Options:
-  --output-directory=PATH
   --bin-factor=INT          Number of pixels in each bin.
   --num-workers=INT         Number of workers used to process in parallel. (default: 4)
+  --output-directory=PATH   Directory to output images to.
+  --fname-prefix=STR        String to add the beginning of all output jp2 files. (default: )
 
 Other actions:
   -h, --help                Show the help

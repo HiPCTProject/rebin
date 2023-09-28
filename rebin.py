@@ -99,6 +99,7 @@ def rebin(
     bin_factor: int,
     num_workers: int = 4,
     output_directory: Path = None,
+    fname_prefix: str = "",
 ) -> Path:
     """
     Rebin a series of jp2 images.
@@ -110,7 +111,8 @@ def rebin(
     :param directory: Path to directory with jp2 images.
     :param bin_factor: Number of pixels in each bin.
     :param num_workers: Number of workers used to process in parallel.
-    :param: output_directory: Directory to output images to.
+    :param output_directory: Directory to output images to.
+    :param fname_prefix: String to add the beginning of all output jp2 files.
     """
     if bin_factor <= 1:
         raise ValueError("bin_factor must be > 1")
@@ -132,6 +134,8 @@ def rebin(
     dtype_in = j2ks[0].dtype
     cratios = j2ks[0]._cratios
 
+    logging.info(f"Data type is {dtype_in}")
+    logging.info(f"Compression ratios are {cratios}")
     logging.info(f"Input shape is {(*slice_shape, n_ims)}")
     output_shape = (
         math.ceil(slice_shape[0] / bin_factor),
@@ -152,7 +156,7 @@ def rebin(
         fname = rebin_and_save_slab(
             slab,
             bin_factor,
-            output_directory / f"{str(z).zfill(6)}.jp2",
+            output_directory / f"{fname_prefix}{str(z).zfill(6)}.jp2",
             dtype_in,
             cratios=cratios,
         )

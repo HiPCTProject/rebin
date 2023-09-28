@@ -50,7 +50,11 @@ def test_rebin(
         output_dir_in = tmp_path / output_dir_in
 
     output_dir_out = rebin(
-        jp2_path, bin_factor=bin_factor, num_workers=2, output_directory=output_dir_in
+        jp2_path,
+        bin_factor=bin_factor,
+        num_workers=2,
+        output_directory=output_dir_in,
+        fname_prefix="prefix_",
     )
     assert output_dir_out.exists()
     if output_dir_in is None:
@@ -58,7 +62,7 @@ def test_rebin(
     else:
         assert output_dir_out == output_dir_in
 
-    jp2_files = sorted(output_dir_out.glob("*.jp2"))
+    jp2_files = sorted(output_dir_out.glob("prefix_*.jp2"))
     assert len(jp2_files) == len(expected_arrays)
 
     for jp2_file, arr in zip(jp2_files, expected_arrays):
