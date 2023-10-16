@@ -15,7 +15,10 @@ scikit-image
 ## Usage
 
 Download `rebin.py`.
-Example run: `python rebin.py path/to/jp2/directory --bin-factor=3 --num-workers=2 --cratio=5`
+Example run: 
+```bash
+python rebin.py --bin-factor=2 --cratio=10 --num-workers=8 --output-directory path/to/output/directory  path/to/jp2/directory
+```
 
 ```
 Usage: rebin.py [OPTIONS] directory
