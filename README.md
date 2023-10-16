@@ -1,6 +1,6 @@
 # rebin
 
-Script to rebin stacks of jp2 images.
+Script to rebin stacks of jp2 images. This is designed to minimise memory usage, and scale across multiple processes.
 
 ## Requirements
 Requires Python 3.10+ and the following packages:
