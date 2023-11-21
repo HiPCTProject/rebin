@@ -22,6 +22,7 @@ import os
 from pathlib import Path
 from typing import List, Union
 
+import click
 import dask.array as da
 import glymur
 import numpy as np
@@ -169,7 +170,40 @@ def rebin(
     return output_directory
 
 
-if __name__ == "__main__":
-    import clize
+@click.command()
+@click.option("--bin-factor", help="Number of pixels in each bin.", type=int)
+@click.option("--cratio", help="Compression ratio to use to save jp2 images.", type=int)
+@click.option(
+    "--num_workers",
+    default=4,
+    help="Number of workers used to process in parallel.",
+    type=int,
+)
+@click.option("--directory", help="Directory with jp2 images.")
+@click.option("--output_directory", help="Directory to output images to.")
+@click.option(
+    "--fname_prefix",
+    default="",
+    help="String to add the beginning of all output jp2 files.",
+)
+def rebin_cmd(
+    directory: Path,
+    *,
+    bin_factor: int,
+    cratio: int,
+    num_workers: int,
+    output_directory: Path,
+    fname_prefix: str,
+):
+    return rebin(
+        Path(directory),
+        bin_factor=bin_factor,
+        cratio=cratio,
+        num_workers=num_workers,
+        output_directory=Path(output_directory),
+        fname_prefix=fname_prefix,
+    )
 
-    clize.run(rebin)
+
+if __name__ == "__main__":
+    rebin_cmd()

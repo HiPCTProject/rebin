@@ -1,4 +1,4 @@
-clize
+click
 dask
 glymur
 numpy
