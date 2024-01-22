@@ -9,6 +9,7 @@ from rebin import rebin
 
 CRATIO = 10
 
+
 def populate_jp2_files(data: np.ndarray, path: Path) -> None:
     """
     Populate a directory or jp2 files from array data.
@@ -56,7 +57,7 @@ def test_rebin(
         num_workers=2,
         output_directory=output_dir_in,
         fname_prefix="prefix_",
-        cratio=CRATIO
+        cratio=CRATIO,
     )
     assert output_dir_out.exists()
     if output_dir_in is None:
