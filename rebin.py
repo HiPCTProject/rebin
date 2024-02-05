@@ -15,7 +15,6 @@ Once that slab of images has been binned and saved, the slices are
 automatically unloaded from memory, preventing memory overloads.
 """
 
-
 import logging
 import math
 import os
