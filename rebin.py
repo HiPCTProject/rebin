@@ -186,8 +186,8 @@ def rebin(
     help="String to add the beginning of all output jp2 files.",
 )
 def rebin_cmd(
-    directory: Path,
     *,
+    directory: Path,
     bin_factor: int,
     cratio: int,
     num_workers: int,
