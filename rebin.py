@@ -164,7 +164,7 @@ def rebin(
         delayed_slab_saves.append(fname)
 
     logging.info("Running computation!")
-    with ProgressBar():
+    with ProgressBar(dt=1):
         delayed(delayed_slab_saves).compute(num_workers=num_workers)
     return output_directory
 
