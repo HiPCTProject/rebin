@@ -27,10 +27,10 @@ jobs:
         auto-update-conda: true
         python-version: ${{ matrix.python-version }}
         environment-file: conda-env.yml
-    - name: Install dependencies
+        channels: conda-forge
+    - name: Install pytest
       run: |
         conda install pytest --yes
     - name: Run tests
       run: |
-        which python
         python -m pytest
