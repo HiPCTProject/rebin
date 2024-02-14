@@ -173,17 +173,16 @@ def rebin(
 @click.option("--bin-factor", help="Number of pixels in each bin.", type=int)
 @click.option("--cratio", help="Compression ratio to use to save jp2 images.", type=int)
 @click.option(
-    "--num_workers",
-    default=4,
+    "--num-workers",
     help="Number of workers used to process in parallel.",
     type=int,
 )
 @click.option("--directory", help="Directory with jp2 images.")
-@click.option("--output_directory", help="Directory to output images to.")
+@click.option("--output-directory", help="Directory to output images to.")
 @click.option(
-    "--fname_prefix",
-    default="",
+    "--fname-prefix",
     help="String to add the beginning of all output jp2 files.",
+    default="",
 )
 def rebin_cmd(
     *,

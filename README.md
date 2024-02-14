@@ -9,21 +9,22 @@ This will ensure that all the dependencies for running the rebin script (includi
 ## Usage
 
 Download `rebin.py`.
-Example run: 
+Example run:
 ```bash
-python rebin.py --bin-factor=2 --cratio=10 --num-workers=8 --directory path/to/jp2/directory --output-directory path/to/output/directory 
+python rebin.py --bin-factor=2 --cratio=10 --num-workers=8 --directory path/to/jp2/directory --output-directory path/to/output/directory
 ```
 
-```
+```bash
+python rebin.py --help
 Usage: rebin.py [OPTIONS]
 
 Options:
   --bin-factor INTEGER     Number of pixels in each bin.
   --cratio INTEGER         Compression ratio to use to save jp2 images.
-  --num_workers INTEGER    Number of workers used to process in parallel.
+  --num-workers INTEGER    Number of workers used to process in parallel.
   --directory TEXT         Directory with jp2 images.
-  --output_directory TEXT  Directory to output images to.
-  --fname_prefix TEXT      String to add the beginning of all output jp2
+  --output-directory TEXT  Directory to output images to.
+  --fname-prefix TEXT      String to add the beginning of all output jp2
                            files.
   --help                   Show this message and exit.
 ```
