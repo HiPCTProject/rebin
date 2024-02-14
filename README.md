@@ -2,15 +2,9 @@
 
 Script to rebin stacks of jp2 images. This is designed to minimise memory usage, and scale across multiple processes.
 
-## Requirements
-Requires Python 3.10+ and the following packages:
-```
-click
-dask
-glymur
-numpy
-scikit-image
-```
+## Installing
+To get this working on any operating system, it's recommended to [install miniconda](https://docs.anaconda.com/free/miniconda/miniconda-install/), and then use the `conda-env.yml` environment file in this repository to [create a new conda environment](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#creating-an-environment-from-an-environment-yml-file).
+This will ensure that all the dependencies for running the rebin script (including `openjpeg`) are installed and available.
 
 ## Usage
 
