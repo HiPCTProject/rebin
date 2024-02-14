@@ -8,6 +8,10 @@ on:
 
 jobs:
   build:
+    defaults:
+      run:
+        # Needed for setup-miniconda
+        shell: bash -el {0}
 
     runs-on: ubuntu-latest
     strategy:
@@ -28,4 +32,5 @@ jobs:
         conda install pytest --yes
     - name: Run tests
       run: |
+        which python
         python -m pytest
