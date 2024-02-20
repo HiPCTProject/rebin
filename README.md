@@ -3,8 +3,16 @@
 Script to rebin stacks of jp2 images. This is designed to minimise memory usage, and scale across multiple processes.
 
 ## Installing
-To get this working on any operating system, it's recommended to [install miniconda](https://docs.anaconda.com/free/miniconda/miniconda-install/), and then use the `conda-env.yml` environment file in this repository to [create a new conda environment](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#creating-an-environment-from-an-environment-yml-file).
-This will ensure that all the dependencies for running the rebin script (including `openjpeg`) are installed and available.
+To get this working on any operating system, it's recommended to [install miniconda](https://docs.anaconda.com/free/miniconda/miniconda-install/).
+Once you have a terminal (or "Anaconda prompt" on Windows) open after installation, these steps will set you up to run the rebinning:
+
+1. Change to a directory where you want to download this code.
+2. `git clone https://github.com/HiPCTProject/rebin`
+3. `cd rebin`
+4. `conda env create -f conda-env.yml`
+5. `conda activate rebin`
+
+Now you should be able to run the rebinning code using the example below.
 
 ## Usage
 
