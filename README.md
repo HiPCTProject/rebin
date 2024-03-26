@@ -2,6 +2,8 @@
 
 Script to rebin stacks of jp2 images. This is designed to minimise memory usage, and scale across multiple processes.
 
+> :warning: The JPEG2000 compression parameters are tailored to HiP-CT images, so may not be appropriate for other datasets.
+
 ## Installing
 To get this working on any operating system, it's recommended to [install miniconda](https://docs.anaconda.com/free/miniconda/miniconda-install/).
 Once you have a terminal (or "Anaconda prompt" on Windows) open after installation, these steps will set you up to run the rebinning:

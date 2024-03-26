@@ -41,6 +41,8 @@ for var in [
 ]:
     os.environ[var] = "1"
 
+JP2K_PARAMS = {"irreversible": True, "numres": 7}
+
 
 def save_jp2(
     arr: np.ndarray,
@@ -63,7 +65,12 @@ def save_jp2(
     cratios :
         Compression ratios.
     """
-    jp2 = glymur.Jp2k(str(file_path), cratios=cratios, numres=1)
+    min_dim = min(arr.shape)
+    JP2K_PARAMS["numres"] = (
+        min(JP2K_PARAMS["numres"], int(np.floor(np.log2(min_dim)))) + 1
+    )
+    print(JP2K_PARAMS)
+    jp2 = glymur.Jp2k(str(file_path), cratios=cratios, **JP2K_PARAMS)
     jp2[:] = np.asarray(arr).astype(dtype)
 
 
