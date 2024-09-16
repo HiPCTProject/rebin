@@ -7,3 +7,4 @@ dependencies:
   - glymur
   - numpy
   - scikit-image
+  - joblib
