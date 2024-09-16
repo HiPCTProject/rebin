@@ -67,9 +67,7 @@ def save_jp2(
     """
     min_dim = min(arr.shape)
     params = JP2K_PARAMS.copy()
-    params["numres"] = (
-        min(params["numres"], int(np.floor(np.log2(min_dim)))) + 1
-    )
+    params["numres"] = min(params["numres"], int(np.floor(np.log2(min_dim)))) + 1
     jp2 = glymur.Jp2k(str(file_path), cratios=cratios, **params)
     jp2[:] = np.asarray(arr).astype(dtype)
 
