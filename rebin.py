@@ -176,6 +176,7 @@ def rebin(
 
     logging.info("Running computation!")
     joblib.Parallel(n_jobs=num_workers, verbose=10)(delayed_slab_saves)
+    logging.info("Done!")
     return output_directory
 
 
