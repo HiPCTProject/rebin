@@ -3,3 +3,4 @@ dask
 glymur
 numpy
 scikit-image
+joblib
