@@ -141,7 +141,7 @@ def rebin(
         return glymur.Jp2k(path)
 
     j2ks = joblib.Parallel(
-        n_jobs=num_workers,
+        n_jobs=num_workers, verbose=10
     )(make_jp2k(f) for f in im_list)
     slice_shape = j2ks[0].shape
     dtype_in = j2ks[0].dtype
@@ -176,7 +176,7 @@ def rebin(
 
     logging.info("Running computation!")
     joblib.Parallel(
-        n_jobs=num_workers,
+        n_jobs=num_workers, verbose=10
     )(delayed_slab_saves)
     return output_directory
 
