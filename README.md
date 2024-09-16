@@ -11,8 +11,10 @@ Once you have a terminal (or "Anaconda prompt" on Windows) open after installati
 1. Change to a directory where you want to download this code.
 2. `git clone https://github.com/HiPCTProject/rebin`
 3. `cd rebin`
-4. `conda env create -f conda-env.yml`
+4. `conda env create --name rebin`
 5. `conda activate rebin`
+6. `conda install uv`
+7. `uv sync`
 
 Now you should be able to run the rebinning code using the example below.
 

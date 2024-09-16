@@ -1,9 +1,0 @@
-name: rebin
-channels:
-  - conda-forge
-dependencies:
-  - click
-  - dask
-  - glymur
-  - numpy
-  - scikit-image

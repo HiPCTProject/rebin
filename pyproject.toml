@@ -1,12 +1,19 @@
-[tool.mypy]
-ignore_missing_imports = true
-no_implicit_optional = false
+[project]
+name = "rebin"
+version = "0.1.0"
+description = "Re-bin JPEG2000 images"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "click",
+    "dask",
+    "glymur",
+    "joblib",
+    "numpy",
+    "scikit-image",
+]
 
-[tool.ruff]
-fix = true
-force-exclude = true
-select = [
-    "F401", # Remove unused imports
-    "I", # Sort imports
-    "UP", # Update Python syntax
+[tool.uv]
+dev-dependencies = [
+    "pytest",
 ]
