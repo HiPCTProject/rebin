@@ -21,6 +21,7 @@ def get_nlevels(jp2: glymur.Jp2k) -> int:
 
     return 0
 
+
 def populate_jp2_files(data: np.ndarray, path: Path) -> None:
     """
     Populate a directory or jp2 files from array data.
