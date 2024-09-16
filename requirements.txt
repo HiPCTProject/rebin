@@ -1,5 +1,0 @@
-click
-dask
-glymur
-numpy
-scikit-image

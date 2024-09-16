@@ -22,16 +22,15 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Setup conda
-      uses: conda-incubator/setup-miniconda@v3
-      with:
-        auto-update-conda: true
-        python-version: ${{ matrix.python-version }}
-        environment-file: conda-env.yml
-        channels: conda-forge
-    - name: Install pytest
-      run: |
-        conda install pytest --yes
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v2
+
+    - name: Set up Python ${{ matrix.python-version }}
+      run: uv python install ${{ matrix.python-version }}
+
+    - name: Install the project
+      run: uv sync --dev
+
     - name: Run tests
-      run: |
-        python -m pytest
+      run: uv run pytest
